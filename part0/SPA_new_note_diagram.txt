@@ -1,0 +1,17 @@
+note over browser:
+User creates a new note on page by
+writing something into the text field and 
+clicking the submit button.
+creates a new note, adds it to the notes list
+renders notes to display
+sends the new note to the server.
+Content-Type header application/json
+end note
+
+browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+
+note over server:
+The server creates a new note object, 
+and adds it to an array called notes.
+end note
+server-->browser: HTTP status code 201 [{"message":"note created"}]
