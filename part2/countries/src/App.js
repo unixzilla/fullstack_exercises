@@ -2,6 +2,30 @@ import React,{useState,useEffect} from 'react'
 import axios from 'axios'
 import { nanoid } from 'nanoid'
 
+const Weather = ({capital}) => {
+  const api_key = process.env.REACT_APP_API_KEY
+  const [weather,setWeather] = useState([])
+  useEffect(() => {
+    axios.get('http://api.weatherstack.com/current?access_key='+api_key+'&query='+capital)
+      .then((response) => {
+        if (response.status === 200) {
+          console.log(response.data)
+          setWeather(response.data.current)
+        }
+      })
+      .catch(()=>{
+        console.log("Error")
+      })
+  }, [])
+  return (
+    <div>
+    <h2>Weather in {capital}</h2>
+    <div>temperature: {weather.temperature} Celcius</div>
+    <img src={weather.weather_icons} />
+    <div>wind: {weather.wind_speed} mph direction {weather.wind_dir}</div>
+    </div>
+  )
+}
 const Language = ({language}) => {
   return (
     <li>{language.name}</li>
@@ -33,6 +57,7 @@ const Country = ({country}) => {
       <div>
         <img src={country.flag} width="130px"/>
       </div>
+      <Weather capital={country.capital}/>
     </div>
   )
 }
