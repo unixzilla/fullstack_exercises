@@ -3,6 +3,7 @@ import phonebookService from './services/phonebook'
 import Persons from './components/Persons'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -17,6 +18,8 @@ const App = () => {
   const [ newNumber, setNewNumber ] = useState('')
   const [ newName, setNewName ] = useState('')
   const [ newSearch, setSearch ] = useState('')
+  const [ errorMessage, setErrorMessage ] = useState(null)
+  const [ notificationStyle, setNotificationStyle ] = useState('error green')
 
   const removePersonClick = (id) => {
     const samePerson = persons.find(person => person.id === id)
@@ -27,7 +30,13 @@ const App = () => {
             setPersons(persons.filter(person => person.id !== id))
           })
           .catch(error => {
-            console.log(error)
+            setNotificationStyle('error red')
+            setErrorMessage(`Information of ${samePerson.name} has already been removed from server`)
+            setPersons(persons.filter(person => person.id !== id))
+            setTimeout(() => {
+             setErrorMessage(null) 
+            setNotificationStyle('error green')
+            }, 2000);
           })
       }
     }
@@ -51,10 +60,18 @@ const App = () => {
    }else{
      phonebookService.addPerson(newEntry)
        .then(newData => {
+         setErrorMessage(`Added ${newData.name}`)
          setPersons(persons.concat(newData))
+         setTimeout(() => {
+          setErrorMessage(null) 
+         }, 2000);
        })
        .catch(error => {
          console.log(error)
+         setErrorMessage('Error')
+         setTimeout(() => {
+          setErrorMessage(null) 
+         }, 2000);
        })
      setNewName('')
      setNewNumber('')
@@ -66,6 +83,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={errorMessage} className={notificationStyle}/>
       <Filter search={newSearch} setSearch={setSearch} />
       <h3>Add a new</h3>
       <PersonForm
