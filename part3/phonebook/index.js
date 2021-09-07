@@ -3,8 +3,12 @@ const express = require('express')
 const cors = require('cors')
 var morgan = require('morgan')
 const app = express()
+//parse request JSON
 app.use(express.json())
+//support CORS
 app.use(cors())
+//read Frontend React build folder
+app.use(express.static('build'))
 //Logs
 morgan.token('post-body', (request,response) => {
     return JSON.stringify(request.body)  
