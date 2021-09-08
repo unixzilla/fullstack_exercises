@@ -71,6 +71,17 @@ app.delete('/api/persons/:id',(request,response)=>{
     response.status(204).end()
 })
 
+app.put('/api/persons/:id',(request,response)=>{
+    const id = Number(request.params.id)
+    const body = request.body
+    data = data.map(d => (d.id !== id)?d:body)
+    const newData = {
+        "id": id,
+        "name": body.name,
+        "number": body.number 
+    }
+    response.json(newData)
+})
 app.post('/api/persons/',(request,response)=>{
     const body = request.body
     if(!body.name){
