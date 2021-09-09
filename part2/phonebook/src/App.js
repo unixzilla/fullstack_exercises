@@ -23,13 +23,14 @@ const App = () => {
 
   const removePersonClick = (id) => {
     const samePerson = persons.find(person => person.id === id)
-    if(samePerson.id > 0){
+    if(samePerson.id.length > 0){
       if(window.confirm(`Delete ${samePerson.name}?`)){
         phonebookService.removePerson(samePerson.id)
           .then(removedData => {
             setPersons(persons.filter(person => person.id !== id))
           })
           .catch(error => {
+            //set state
             setNotificationStyle('error red')
             setErrorMessage(`Information of ${samePerson.name} has already been removed from server`)
             setPersons(persons.filter(person => person.id !== id))

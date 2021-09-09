@@ -32,6 +32,7 @@ if(process.argv.length === 5){
     })
     person.save().then(result=>{
         console.log('person added to phonebook')
+        //finish insert task, close the connection
         mongoose.connection.close()
     })
 }
@@ -43,6 +44,7 @@ if(process.argv.length === 3) {
         persons.forEach(person=>{
             console.log(`${person.name} ${person.number}`)
         })
+        //finish query, close the connection
         mongoose.connection.close()
     })
 }
