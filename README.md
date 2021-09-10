@@ -1,1 +1,2 @@
-# fullstack_exercises
+# fullstack exercises for everyone
+
