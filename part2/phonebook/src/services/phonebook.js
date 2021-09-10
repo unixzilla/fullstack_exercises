@@ -14,7 +14,13 @@ const getAll = () => {
 const addPerson = (person) => {
     const request = axios
       .post(apiURL,person)
-      .then(response => response.data)
+      .then(response => {
+        return response.data
+      }).catch(error=>{
+        console.log(error.response.data)
+        return error.response.data
+        //throw new Error({message:error.response.data});
+      })
     return request
 }
 const removePerson = (id) => {
@@ -27,6 +33,13 @@ const updatePerson = (person,id) => {
   const request = axios
   .put(`${apiURL}/${id}`,person)
   .then(response => response.data)
+      .catch(error=>{
+        console.log(error.response.data)
+        return error.response.data
+        //throw new Error({message:error.response.data});
+      })
+
+
   return request
 }
 export default {getAll,addPerson,removePerson,updatePerson}
