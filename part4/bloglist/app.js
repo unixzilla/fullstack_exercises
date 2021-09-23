@@ -1,4 +1,6 @@
 const express = require('express')
+//eliminating async try-catch errors
+require('express-async-errors')
 const app = express()
 const mongoose = require('mongoose')
 const blogRouter = require('./controllers/blog')
