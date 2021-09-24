@@ -7,6 +7,10 @@ const api = supertest(app)
 //helper for demo data
 const helper = require('./test_helper')
 
+const User = require('../models/user')
+const bcrypt = require('bcrypt')
+
+
 ////////////////////////////
 //before the test prepare 
 ////////////////////////////
@@ -22,7 +26,96 @@ beforeEach(async ()=>{
 
 },10000)
 //set(10000) longer time out
+describe('when there is initially one user in db',()=>{
 
+    beforeEach(async ()=>{
+        //reset all 
+        await User.deleteMany({})
+        const passwordHash = await bcrypt.hash('secret',10)
+        const newUser = new User({
+            username:'root',
+            name:'Root',
+            passwordHash
+        })
+        await newUser.save()
+    },10000)
+
+
+    test('creation succeeds with a fresh username',async ()=>{
+        const usersAsStart = await helper.userInDb()
+        const newUser = {
+            username:'unix',
+            name:'Unix',
+            password:'Hash'
+        }
+        await api.post('/api/users/')
+            .send(newUser)
+            .expect(200)
+            .expect('Content-Type',/application\/json/)
+
+
+        const userAsEnd = await helper.userInDb()
+        expect(userAsEnd).toHaveLength(usersAsStart.length+1)
+        const usernames = userAsEnd.map(u=>u.username)
+        expect(usernames).toContain(newUser.username)
+
+    })
+
+
+    test('creation fails with proper statuscode and message if username already taken',async ()=>{
+        const userAsStart = await helper.userInDb()
+        const newUser = {
+            username:'root',
+            name:'Root',
+            password:'secret'
+        }
+
+        const result = await api.post('/api/users/')
+            .send(newUser)
+            .expect(400)
+            .expect('Content-Type',/application\/json/)
+
+        expect(result.body.error).toContain('`username` to be unique')
+
+        const userAsEnd = await helper.userInDb()
+        expect(userAsEnd).toHaveLength(userAsStart.length)
+
+    })
+
+    test('creation fails with proper status code and message, username must be at least 3 characters',async ()=>{
+
+        const userAsStart = await helper.userInDb()
+        const newUser = {
+            username:'no',
+            password:'123456'
+        }
+        const result = await api.post('/api/users')
+            .send(newUser)
+            .expect(400)
+            .expect('Content-Type',/application\/json/)
+
+        expect(result.body.error).toContain('User validation failed: username: Path `username`')
+        const userAsEnd = await helper.userInDb()
+        expect(userAsEnd).toHaveLength(userAsStart.length)
+    })
+
+    test('creation fails with proper status code and message, password must be at least 3 characters',async ()=>{
+
+        const userAsStart = await helper.userInDb()
+        const newUser = {
+            username:'nonoo',
+            password:'12'
+        }
+        const result = await api.post('/api/users')
+            .send(newUser)
+            .expect(400)
+            .expect('Content-Type',/application\/json/)
+
+        expect(result.body.error).toContain('User validation failed: password: Path `password`')
+        const userAsEnd = await helper.userInDb()
+        expect(userAsEnd).toHaveLength(userAsStart.length)
+    })
+})
 //4.8 check get URL
 test('the blog list application returns the correct amount of blog posts in the JSON format.',async ()=>{
   const response = await api.get('/api/blogs')
