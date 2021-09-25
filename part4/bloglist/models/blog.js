@@ -1,24 +1,24 @@
 const mongoose = require('mongoose')
 
 const blogSchema = mongoose.Schema({
-	title:{
-		type:String,
+  title:{
+    type:String,
     required:true
-	},
-	author:{
-		type:String
-	},
-	url:{
-		type:String,
+  },
+  author:{
+    type:String
+  },
+  url:{
+    type:String,
     required:true
-	},
-	likes:{
-		type:Number
-    },
-    user:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'User'
-    }
+  },
+  likes:{
+    type:Number
+  },
+  user:{
+    type:mongoose.Schema.Types.ObjectId,
+    ref:'User'
+  }
 
 })
 
