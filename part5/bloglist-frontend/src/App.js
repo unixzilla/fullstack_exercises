@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect,useRef } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable'
+import CreateNewBlog from './components/CreateNewBlog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -12,16 +14,13 @@ const App = () => {
   const [ errorMessage, setErrorMessage ] = useState(null)
   const [ notificationStyle, setNotificationStyle ] = useState('error green')
 
-  const [title,setTitle] = useState("")
-  const [author,setAuthor] = useState("")
-  const [url,setUrl] = useState("")
-
+  //get data from mongoDB
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, [])
-  
+
   //retrieve a JSON string to get user Object from local storage
   useEffect(()=> {
     const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
@@ -31,43 +30,40 @@ const App = () => {
     }
   }, [])
 
+  //component event ref
+  const blogFormRef = useRef()
+
   //handle logout
   const logout = (event)=>{
     window.localStorage.removeItem('loggedNoteappUser')
     setUser(null)
   }
 
-  //form submit new blog
-  //make sure add header token
-  const handleCreate = async (event)=>{
-    event.preventDefault()
-    console.log("create",title,author,url)
-    try{
-      blogService.setToken(user.token)
-      const newBlog = await blogService.addBlog({
-        title:title,
-        author:author,
-        url:url
-      })
-      console.log("response:",newBlog)
-      setTitle("")
-      setAuthor("")
-      setUrl("")
-      setNotificationStyle('error green')
-      setErrorMessage(`a new blog ${newBlog.title} by ${newBlog.author} added`)
-      setBlogs(blogs.concat(newBlog))
-      setTimeout(()=>{
-        setErrorMessage(null)
-      },5000)
-    }catch(exception){
-      setNotificationStyle('error red')
-      console.log(exception)
-      setErrorMessage('Wrong input')
-      setTimeout(()=>{
-        setErrorMessage(null)
-      },5000)
+    //form submit new blog
+    //make sure add header token
+    const handleCreate = async (blogObject)=>{
+        try{
+            blogFormRef.current.toggleVisibility()
+            blogService.setToken(user.token)
+            const newBlog = await blogService.addBlog(blogObject)
+            console.log("response:",newBlog)
+            //call component event
+
+            setNotificationStyle('error green')
+            setErrorMessage(`a new blog ${newBlog.title} by ${newBlog.author} added`)
+            setBlogs(blogs.concat(newBlog))
+            setTimeout(()=>{
+                setErrorMessage(null)
+            },5000)
+        }catch(exception){
+            setNotificationStyle('error red')
+            console.log(exception)
+            setErrorMessage('Wrong input')
+            setTimeout(()=>{
+                setErrorMessage(null)
+            },5000)
+        }
     }
-  }
   //form submit handle 
   const handleLogin = async (event)=>{
     event.preventDefault()
@@ -128,42 +124,12 @@ const App = () => {
     <Notification message={errorMessage} className={notificationStyle}/>
     {user.username} logged in <button onClick={logout}>logout</button>
 
-    <div>
-      <h1>create new</h1>
-      <form onSubmit={handleCreate}>
-      <div>
-      title:<input 
-        type="text"
-        value={title}
-        name="title"
-        onChange={({target})=>setTitle(target.value)}
-      /> 
-      </div>
-      <div>
-        author:<input 
-          type="text"
-          value={author}
-          name="author"
-          onChange={({target})=>setAuthor(target.value)}
-      /> 
-      </div>
-      <div>
-        url:<input 
-          type="text"
-          value={url}
-          name="url"
-          onChange={({target})=>setUrl(target.value)}
-      /> 
-      </div>
-      <div>
-        <button type="submit">create</button>
-      </div>
-      </form>
-    </div>
-
+    <Togglable buttonLabel='create' ref={blogFormRef}>
+        <CreateNewBlog handleCreate={handleCreate}/>
+    </Togglable>
 
     {blogs.map(blog =>
-      <Blog key={blog.id} blog={blog} />
+      <Blog key={blog.id} blog={blog} user={user}/>
     )}
     </div>
 
