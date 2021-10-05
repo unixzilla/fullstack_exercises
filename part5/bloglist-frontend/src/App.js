@@ -16,8 +16,11 @@ const App = () => {
 
   //get data from mongoDB
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
+      blogService.getAll().then(blogs =>{
+          //sorting likes
+          const sortLikesBlogs = blogs.sort((a,b)=>a.likes-b.likes)
+          setBlogs( sortLikesBlogs )
+      }
     )
   }, [])
 
