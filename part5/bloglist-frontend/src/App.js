@@ -16,11 +16,12 @@ const App = () => {
 
   //get data from mongoDB
   useEffect(() => {
-      blogService.getAll().then(blogs =>{
-          //sorting likes
-          const sortLikesBlogs = blogs.sort((a,b)=>a.likes-b.likes)
-          setBlogs( sortLikesBlogs )
-      }
+    blogService.getAll().then(blogs =>{
+      //sorting likes
+      console.log(blogs)
+      const sortLikesBlogs = blogs.sort((a,b)=>a.likes-b.likes)
+      setBlogs( sortLikesBlogs.reverse() )
+    }
     )
   }, [])
 
@@ -35,6 +36,7 @@ const App = () => {
 
   //component event ref
   const blogFormRef = useRef()
+  const blogUpdateRef = useRef()
 
   //handle logout
   const logout = (event)=>{
@@ -42,31 +44,31 @@ const App = () => {
     setUser(null)
   }
 
-    //form submit new blog
-    //make sure add header token
-    const handleCreate = async (blogObject)=>{
-        try{
-            blogFormRef.current.toggleVisibility()
-            blogService.setToken(user.token)
-            const newBlog = await blogService.addBlog(blogObject)
-            console.log("response:",newBlog)
-            //call component event
+  //form submit new blog
+  //make sure add header token
+  const handleCreate = async (blogObject)=>{
+    try{
+      blogFormRef.current.toggleVisibility()
+      blogService.setToken(user.token)
+      const newBlog = await blogService.addBlog(blogObject)
+      console.log("response:",newBlog)
+      //call component event
 
-            setNotificationStyle('error green')
-            setErrorMessage(`a new blog ${newBlog.title} by ${newBlog.author} added`)
-            setBlogs(blogs.concat(newBlog))
-            setTimeout(()=>{
-                setErrorMessage(null)
-            },5000)
-        }catch(exception){
-            setNotificationStyle('error red')
-            console.log(exception)
-            setErrorMessage('Wrong input')
-            setTimeout(()=>{
-                setErrorMessage(null)
-            },5000)
-        }
+      setNotificationStyle('error green')
+      setErrorMessage(`a new blog ${newBlog.title} by ${newBlog.author} added`)
+      setBlogs(blogs.concat(newBlog))
+      setTimeout(()=>{
+        setErrorMessage(null)
+      },5000)
+    }catch(exception){
+      setNotificationStyle('error red')
+      console.log(exception)
+      setErrorMessage('Wrong input')
+      setTimeout(()=>{
+        setErrorMessage(null)
+      },5000)
     }
+  }
   //form submit handle 
   const handleLogin = async (event)=>{
     event.preventDefault()
@@ -92,6 +94,21 @@ const App = () => {
 
     }
 
+  }
+  const updateBlog = async (blogObject)=>{
+    
+      blogService.setToken(user.token)
+      const updatedBlog = await blogService.updateBlog(blogObject)
+      console.log("response:",updatedBlog)
+      //call component event
+    
+  }
+  const removeBlog = async (blogObject)=>{
+    console.log(blogObject)
+      blogService.setToken(user.token)
+      const deletedBlog = await blogService.deleteBlog(blogObject)
+      console.log("response:",deletedBlog)
+      //call component event
   }
   if(user === null){ 
     return (
@@ -128,11 +145,11 @@ const App = () => {
     {user.username} logged in <button onClick={logout}>logout</button>
 
     <Togglable buttonLabel='create' ref={blogFormRef}>
-        <CreateNewBlog handleCreate={handleCreate}/>
+    <CreateNewBlog createBlog={handleCreate}/>
     </Togglable>
 
     {blogs.map(blog =>
-      <Blog key={blog.id} blog={blog} user={user}/>
+      <Blog key={blog.id} blog={blog} user={user} update={updateBlog} remove={removeBlog}/>
     )}
     </div>
 
