@@ -1,5 +1,6 @@
 import React from 'react'
 import Togglable from './Togglable'
+import PropTypes from 'prop-types'
 
 const Blog = ({blog,user,update,remove}) => {
   const blogStyle={
@@ -27,13 +28,13 @@ const Blog = ({blog,user,update,remove}) => {
   }
   return(
     <div style={blogStyle}>
-    <div>{blog.title} {blog.author}</div>
+    <div className='blog-title'>{blog.title} {blog.author}</div>
     <Togglable buttonLabel='view'>
     <div>
     {blog.url}
     </div>
     <div>
-    likes {blog.likes}<button onClick={clickLike}>like</button>
+    likes {blog.likes}<button className='like-button' onClick={clickLike}>like</button>
     </div>
     <div>
     {blog.user.name}
@@ -43,4 +44,12 @@ const Blog = ({blog,user,update,remove}) => {
     </div>
   )
 }
+//Types checking for React props
+Blog.propTypes = {
+  update:PropTypes.func.isRequired,
+  remove:PropTypes.func.isRequired,
+  user:PropTypes.object.isRequired,
+  blog:PropTypes.object.isRequired
+}
+
 export default Blog

@@ -8,8 +8,8 @@ import loginService from './services/login'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [username,setUsername] = useState("")
-  const [password,setPassword] = useState("")
+  const [username,setUsername] = useState('')
+  const [password,setPassword] = useState('')
   const [user,setUser] = useState(null)
   const [ errorMessage, setErrorMessage ] = useState(null)
   const [ notificationStyle, setNotificationStyle ] = useState('error green')
@@ -95,19 +95,25 @@ const App = () => {
     }
 
   }
+  //update blog
   const updateBlog = async (blogObject)=>{
     
       blogService.setToken(user.token)
       const updatedBlog = await blogService.updateBlog(blogObject)
-      console.log("response:",updatedBlog)
+      const updateBlogs = blogs.map(blog => (blog.id === updatedBlog.id) ? {...blog,likes:updatedBlog.likes} : blog)
+      const sortLikesBlogs = updateBlogs.sort((a,b)=>a.likes-b.likes)
+      setBlogs( sortLikesBlogs.reverse() )
       //call component event
     
   }
+  //remove blog
   const removeBlog = async (blogObject)=>{
     console.log(blogObject)
       blogService.setToken(user.token)
       const deletedBlog = await blogService.deleteBlog(blogObject)
-      console.log("response:",deletedBlog)
+      const updateBlogs = blogs.filter(blog => blog.id !== blogObject.id)
+      const sortLikesBlogs = updateBlogs.sort((a,b)=>a.likes-b.likes)
+      setBlogs( sortLikesBlogs.reverse() )
       //call component event
   }
   if(user === null){ 
