@@ -1,17 +1,17 @@
 import React,{ useState,useImperativeHandle } from 'react'
 import PropTypes from 'prop-types'
 
-const Togglable = React.forwardRef((props,ref)=>{
+const Togglable = React.forwardRef((props,ref) => {
   const [visible,setVisible] = useState(false)
   //style
-  const hideWhenVisible = {display: visible?'none':''}
-  const showWhenVisible = {display: visible?'':'none'}
+  const hideWhenVisible = { display: visible?'none':'' }
+  const showWhenVisible = { display: visible?'':'none' }
 
-  const toggleVisibility = () =>{
+  const toggleVisibility = () => {
     setVisible(!visible)
   }
   //for App.js uses Ref hook
-  useImperativeHandle(ref,()=>{
+  useImperativeHandle(ref,() => {
     return {
       toggleVisibility
     }
@@ -19,13 +19,13 @@ const Togglable = React.forwardRef((props,ref)=>{
 
   return (
     <div>
-    <div className='show-button' style={hideWhenVisible}>
-    <button onClick={toggleVisibility}>{props.buttonLabel}</button>
-    </div>
-    <div className='hide-button' style={showWhenVisible}>
-    {props.children}
-    <button onClick={toggleVisibility}>cancel</button>
-    </div>
+      <div className='show-button' style={hideWhenVisible}>
+        <button onClick={toggleVisibility}>{props.buttonLabel}</button>
+      </div>
+      <div className='hide-button' style={showWhenVisible}>
+        {props.children}
+        <button onClick={toggleVisibility}>cancel</button>
+      </div>
     </div>
   )
 })

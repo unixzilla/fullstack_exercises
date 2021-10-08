@@ -2,7 +2,7 @@ import React from 'react'
 import Togglable from './Togglable'
 import PropTypes from 'prop-types'
 
-const Blog = ({blog,user,update,remove}) => {
+const Blog = ({ blog,user,update,remove }) => {
   const blogStyle={
     paddingTop:10,
     paddingLeft: 2,
@@ -15,32 +15,32 @@ const Blog = ({blog,user,update,remove}) => {
   const showRemove = {
     display: removable ?'':'none'
   }
-  const clickLike = ()=>{
+  const clickLike = () => {
     update({
       ...blog,
       likes:blog.likes+1
     })
   }
-  const removeBlog = ()=>{
+  const removeBlog = () => {
     if(window.confirm(`Remove blog ${blog.title} by ${blog.author}`)){
       remove(blog)
     }
   }
   return(
     <div style={blogStyle}>
-    <div className='blog-title'>{blog.title} {blog.author}</div>
-    <Togglable buttonLabel='view'>
-    <div>
-    {blog.url}
-    </div>
-    <div>
+      <div className='blog-title'>{blog.title} {blog.author}</div>
+      <Togglable buttonLabel='view'>
+        <div>
+          {blog.url}
+        </div>
+        <div>
     likes {blog.likes}<button className='like-button' onClick={clickLike}>like</button>
-    </div>
-    <div>
-    {blog.user.name}
-    </div>
-    <button style={showRemove} onClick={removeBlog}>remove</button>
-    </Togglable>
+        </div>
+        <div>
+          {blog.user.name}
+        </div>
+        <button style={showRemove} onClick={removeBlog}>remove</button>
+      </Togglable>
     </div>
   )
 }
