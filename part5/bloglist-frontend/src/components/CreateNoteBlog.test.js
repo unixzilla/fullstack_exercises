@@ -16,7 +16,7 @@ test('5.16 ',()=>{
   const authorInput = component.container.querySelector('#author')
   const urlInput = component.container.querySelector('#url')
 
-  const form = component.container.querySelector('#create-form')
+  const form = component.container.querySelector('#create_form')
 
   fireEvent.change(titleInput,{
     target: { value: 'Title input' }

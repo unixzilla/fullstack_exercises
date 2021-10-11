@@ -39,7 +39,7 @@ const Blog = ({ blog,user,update,remove }) => {
         <div>
           {blog.user.name}
         </div>
-        <button style={showRemove} onClick={removeBlog}>remove</button>
+        <button id='remove_blog' style={showRemove} onClick={removeBlog}>remove</button>
       </Togglable>
     </div>
   )

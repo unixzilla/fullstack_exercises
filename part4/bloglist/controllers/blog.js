@@ -32,8 +32,8 @@ blogRouter.post('/', userExtractor, async (request,response)=>{
 
 //delete post
 blogRouter.delete('/:id', userExtractor, async (request,response)=>{
-  const user = request.user
-  const blog = await Blog.findById(request.params.id)
+    const user = request.user
+    const blog = await Blog.findById(request.params.id)
   //check user whether the blog owner
   if(blog.user.toString() === user.id.toString()){
     //owner allow delete
