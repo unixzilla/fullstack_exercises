@@ -128,6 +128,11 @@ describe('Blog app', function() {
                 expect(str).to.eq('Remove blog test title by test author')
                 return true
             })
+            cy.wait(1000)
+            cy.visit('http://localhost:3000')
+            cy.wait(1000)
+            cy.contains('test title').should('not.exist')
+            cy.wait(1000)
         })
 
     })
