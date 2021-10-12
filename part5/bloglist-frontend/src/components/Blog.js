@@ -27,7 +27,7 @@ const Blog = ({ blog,user,update,remove }) => {
     }
   }
   return(
-    <div style={blogStyle}>
+    <div className='blog-item' style={blogStyle}>
       <div className='blog-title'>{blog.title} {blog.author}</div>
       <Togglable buttonLabel='view'>
         <div>
