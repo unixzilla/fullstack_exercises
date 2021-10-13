@@ -12,7 +12,6 @@ mongoose.connect(url)
   })
 
 const personSchema = new mongoose.Schema({
-<<<<<<< HEAD
     name: {
         type:String,
         unique:true,
@@ -22,10 +21,6 @@ const personSchema = new mongoose.Schema({
         minLength:8,
         type:String
     },
-=======
-  name: String,
-  number:String,
->>>>>>> c258e82474a65656302e1f36fed9cc378cba3418
 })
 
 personSchema.plugin(uniqueValidator)

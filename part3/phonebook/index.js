@@ -61,7 +61,6 @@ app.delete('/api/persons/:id',(request,response,next)=>{
 
 app.put('/api/persons/:id',(request,response,next)=>{
 
-<<<<<<< HEAD
     const body = request.body
     const newData = {
         "name": body.name,
@@ -83,38 +82,6 @@ app.post('/api/persons/',(request,response,next)=>{
     newData.save()
         .then(person=>response.json(person))
         .catch(error=>next(error))
-=======
-  const body = request.body
-  const newData = {
-    'name': body.name,
-    'number': body.number 
-  }
-
-  Person.findByIdAndUpdate(request.params.id,newData,{new:true})
-    .then(result=>{
-      response.json(result)
-    })
-    .catch(error=>next(error))
-
-})
-app.post('/api/persons/',(request,response)=>{
-  const body = request.body
-  if(!body.name){
-    return response.status(400).json({
-      error:'name is missing'
-    })
-  }
-  const newData = new Person({
-    'name': body.name,
-    'number': body.number 
-  })
-  newData.save().then(person=>{
-    response.json(person)
-  })
-    .catch(()=>{
-      console.log('save error')
-    })
->>>>>>> c258e82474a65656302e1f36fed9cc378cba3418
 })
 
 //Middleware
@@ -124,7 +91,6 @@ const unknownEndpoint = (request,response) => {
 app.use(unknownEndpoint)
 
 const errorHandler = (error,request,response,next) => {
-<<<<<<< HEAD
     console.error(error.message)
     if(error.name==='CastError'){
         return response.status(400).send({error:'malformatted id'})
@@ -133,13 +99,6 @@ const errorHandler = (error,request,response,next) => {
        return response.status(400).json({error:error.message})
     }
     next(error)
-=======
-  console.error(error.message)
-  if(error.name==='CastError'){
-    return response.status(400).send({error:'malformatted id'})
-  }
-  next(error)
->>>>>>> c258e82474a65656302e1f36fed9cc378cba3418
 }
 app.use(errorHandler)
 
