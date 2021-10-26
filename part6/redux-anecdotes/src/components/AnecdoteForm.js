@@ -1,23 +1,32 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { createAnecdote } from '../reducers/anecdoteReducer'
-import { notificationChange, notificationReset } from '../reducers/notificationReducer'
+import { createAnecdote, createAsyncAnecdote } from '../reducers/anecdoteReducer'
+import { notificationChange, notificationReset, setNotification } from '../reducers/notificationReducer'
+import anecdoteService from '../services/anecdotes'
 
 const AnecdoteForm = () => {
 
   const dispatch = useDispatch()
 
-  const addNewAnecdote = (event) => {
+  const addNewAnecdote = async (event) => {
     event.preventDefault()
     const content = event.target.anecdote.value
     event.target.anecdote.value = ''
-    dispatch(createAnecdote(content))
+    // OLD
+    //const newAnecdote = await anecdoteService.createNew(content)
+    //dispatch(createAnecdoteData(newAnecdote))
 
+    // NEW abstracted REST call
+    dispatch(createAsyncAnecdote(content))
+
+    //NEW
+    dispatch(setNotification(`you added '${content}'`,5000))
+    //OLD
     //update the state of notification
-    dispatch(notificationChange('you added \''+content+'\''))
+    //dispatch(notificationChange(`you added '${content}'`))
 
     //after 5 seconds reset the notification
-    setTimeout(()=>dispatch(notificationReset()),5000)
+    //setTimeout(()=>dispatch(notificationReset()),5000)
   }
 
   return (

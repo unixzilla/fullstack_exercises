@@ -14,7 +14,19 @@ export const notificationChange = filter => {
     filter,
   }
 }
-
+export const setNotification = (text,time) => {
+  return async dispatch => {
+    dispatch({
+      type: 'SET_NOTIFICATION',
+      filter: text,
+    })
+    await new Promise(resolve => setTimeout(resolve, time))
+    dispatch({
+      type: 'SET_NOTIFICATION',
+      filter: '',
+    })
+  }
+}
 export const notificationReset = () => {
   return {
     type: 'RESET',
