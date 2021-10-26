@@ -14,17 +14,22 @@ export const notificationChange = filter => {
     filter,
   }
 }
+
+let timeoutID;
 export const setNotification = (text,time) => {
+  clearTimeout(timeoutID)
   return async dispatch => {
     dispatch({
       type: 'SET_NOTIFICATION',
       filter: text,
     })
-    await new Promise(resolve => setTimeout(resolve, time))
-    dispatch({
-      type: 'SET_NOTIFICATION',
-      filter: '',
-    })
+
+    timeoutID = setTimeout(()=>{
+      dispatch({
+        type: 'SET_NOTIFICATION',
+        filter: '',
+      })
+    }, time)
   }
 }
 export const notificationReset = () => {

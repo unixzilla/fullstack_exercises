@@ -1,12 +1,9 @@
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { createAnecdote, createAsyncAnecdote } from '../reducers/anecdoteReducer'
-import { notificationChange, notificationReset, setNotification } from '../reducers/notificationReducer'
-import anecdoteService from '../services/anecdotes'
+import { connect } from 'react-redux'
+import {  createAsyncAnecdote } from '../reducers/anecdoteReducer'
+import { setNotification } from '../reducers/notificationReducer'
 
-const AnecdoteForm = () => {
-
-  const dispatch = useDispatch()
+const AnecdoteForm = (props) => {
 
   const addNewAnecdote = async (event) => {
     event.preventDefault()
@@ -17,10 +14,11 @@ const AnecdoteForm = () => {
     //dispatch(createAnecdoteData(newAnecdote))
 
     // NEW abstracted REST call
-    dispatch(createAsyncAnecdote(content))
-
+    //dispatch(createAsyncAnecdote(content))
+    props.createAsyncAnecdote(content)
     //NEW
-    dispatch(setNotification(`you added '${content}'`,5000))
+    //dispatch(setNotification(`you added '${content}'`,5000))
+    props.setNotification(`you added '${content}'`,5000)
     //OLD
     //update the state of notification
     //dispatch(notificationChange(`you added '${content}'`))
@@ -39,5 +37,10 @@ const AnecdoteForm = () => {
     </>
   )
 }
+const mapDispatchToProps = {
+  createAsyncAnecdote,
+  setNotification
+}
 
-export default AnecdoteForm
+const ConnectedAnecdoteForm = connect(null,mapDispatchToProps)(AnecdoteForm)
+export default ConnectedAnecdoteForm
