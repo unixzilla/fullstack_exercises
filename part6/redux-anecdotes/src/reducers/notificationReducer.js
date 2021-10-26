@@ -1,15 +1,23 @@
-const notificationReducer = (state = 'ALL', action) => {
+const notificationReducer = (state = '', action) => {
   switch (action.type) {
-    case 'SET_FILTER':
+    case 'SET_NOTIFICATION':
       return action.filter
+    case 'RESET':
+      return ''
     default:
       return state
   }
 }
-export const filterChange = filter => {
+export const notificationChange = filter => {
   return {
-    type: 'SET_FILTER',
+    type: 'SET_NOTIFICATION',
     filter,
+  }
+}
+
+export const notificationReset = () => {
+  return {
+    type: 'RESET',
   }
 }
 

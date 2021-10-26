@@ -1,14 +1,31 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { voteAnecdote } from '../reducers/anecdoteReducer'
+import { notificationChange, notificationReset } from '../reducers/notificationReducer'
 
 const AnecdoteList = () => {
 
-  const anecdotes = useSelector(state => state.anecdotes)
+  const anecdotes = useSelector( state => 
+    state.anecdotes.filter( 
+      str => str.content.toLowerCase().includes( 
+        state.filter.toLowerCase() 
+      ) 
+    )
+  )
   const dispatch = useDispatch()
 
   const vote = (id) => {
+    //update the state of anecdote
     dispatch(voteAnecdote(id))
+
+    //find out content
+    const anecdote = anecdotes.find(state => state.id === id)
+
+    //update the state of notification
+    dispatch(notificationChange('you voted \''+anecdote.content+'\''))
+
+    //after 5 seconds reset the notification
+    setTimeout(()=>dispatch(notificationReset()),5000)
   }
   
   ////////////////////////////////////////
