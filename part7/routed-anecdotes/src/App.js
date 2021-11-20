@@ -71,19 +71,31 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
+  /* use hooks instead useField
   const [content, setContent] = useState('')
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
+  */
+  const content = useField('text')
+  const author = useField('text')
+  const info = useField('text')
+  console.log(content)
   //redirect to 
   const history = useHistory()
 
+  const handleReset = (e) => {
+    e.preventDefault()
+    content.reset() 
+    author.reset()
+    info.reset()
+  }
   const handleSubmit = (e) => {
     e.preventDefault()
-    props.setNotification(`a new anecdote ${content}`)
+    props.setNotification(`a new anecdote ${content.value}`)
     props.addNew({
-      content,
-      author,
-      info,
+      content:content.value,
+      author:author.value,
+      info:info.value,
       votes: 0
     })
     //redirect to 
@@ -98,17 +110,30 @@ const CreateNew = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
+          <input 
+            value={content.value}
+            type={content.type}
+            onChange={content.onChange}
+          />
         </div>
         <div>
           author
-          <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
+          <input  
+            value={author.value}
+            type={author.type}
+            onChange={author.onChange}
+          />
         </div>
         <div>
           url for more info
-          <input name='info' value={info} onChange={(e)=> setInfo(e.target.value)} />
+          <input 
+            value={info.value}
+            type={info.type}
+            onChange={info.onChange}
+          />
         </div>
         <button>create</button>
+        <button onClick={handleReset}>reset</button>
       </form>
     </div>
   )
